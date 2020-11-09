@@ -59,8 +59,8 @@ public class ChildrenBlockingLock extends ChildrenNodeLock {
 
         boolean lockSuccess;
         try {
-            while (true) {
-                String prevElementName = getPrevElementName();
+            while (true) { //这里while(true) 的作用,会一直在这里循环,不停的监听前一个节点的变化, 避免了羊群效应
+                String prevElementName = getPrevElementName();//获取当前节点的 前一个节点, 为null 说明自己就是第一个节点
                 if (prevElementName == null) {
                     log.trace("{} 没有更靠前的子节点，加锁成功", elementNodeName);
                     lockSuccess = true;

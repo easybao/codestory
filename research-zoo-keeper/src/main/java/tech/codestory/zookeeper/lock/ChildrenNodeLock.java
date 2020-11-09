@@ -51,7 +51,7 @@ public abstract class ChildrenNodeLock extends ZooKeeperBase implements ZooKeepe
     final public List<String> getOrderedChildren(String path, boolean watch)
             throws KeeperException, InterruptedException {
         List<String> children = getZooKeeper().getChildren(path, watch);
-        Collections.sort(children, new StringCompare());
+        Collections.sort(children, new StringCompare());//默认排序
         return children;
     }
 
@@ -88,12 +88,12 @@ public abstract class ChildrenNodeLock extends ZooKeeperBase implements ZooKeepe
      */
     protected String getPrevElementName() throws KeeperException, InterruptedException {
         List<String> elementNames = getOrderedChildren(this.guidNodeName, false);
-        traceOrderedChildren(this.guidNodeName, elementNames);
+        traceOrderedChildren(this.guidNodeName, elementNames);//日志打印
 
         String prevElementName = null;
         for (String oneElementName : elementNames) {
             if (this.elementNodeFullName.endsWith(oneElementName)) {
-                // 已经到了当前节点
+                // 已经到了当前节点, 跳出for
                 break;
             }
             prevElementName = oneElementName;
@@ -121,7 +121,7 @@ public abstract class ChildrenNodeLock extends ZooKeeperBase implements ZooKeepe
             String fullNodeName = this.guidNodeName + "/" + getChildPrefix();
             byte[] nodeValue = clientGuid == null ? new byte[0] : clientGuid.getBytes();
             elementNodeFullName = getZooKeeper().create(fullNodeName, nodeValue,
-                    ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+                    ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);//创建持久节点下的 顺序节点
             elementNodeName = elementNodeFullName.substring(guidNodeName.length() + 1);
 
             log.trace("{} 尝试获取锁", elementNodeName);
@@ -209,7 +209,7 @@ public abstract class ChildrenNodeLock extends ZooKeeperBase implements ZooKeepe
     private class StringCompare implements Comparator<String> {
         @Override
         public int compare(String string1, String string2) {
-            return string1.substring(string1.length() - 10)
+            return string1.substring(string1.length() - 10)//截取后10位 进行排序,从小到大
                     .compareTo(string2.substring(string2.length() - 10));
         }
     }

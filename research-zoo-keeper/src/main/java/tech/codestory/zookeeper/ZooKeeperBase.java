@@ -14,7 +14,9 @@ import org.slf4j.profiler.Profiler;
 
 /**
  * 为 ZooKeeper测试代码创建一个基类，封装建立连接的过程
- * 
+ *
+ *  https://www.cnblogs.com/codestory/p/11387116.html
+ *
  * @author junyongliao
  * @date 2019/8/16
  */
@@ -57,7 +59,7 @@ public class ZooKeeperBase implements Watcher {
      * @return
      */
     public String createRootNode(String rootNodeName) {
-        CreateMode createMode = CreateMode.PERSISTENT;
+        CreateMode createMode = CreateMode.PERSISTENT;//持久节点
         return createRootNode(rootNodeName, createMode);
     }
 
@@ -93,9 +95,9 @@ public class ZooKeeperBase implements Watcher {
 
     @Override
     final public void process(WatchedEvent event) {
-        if (Event.EventType.None.equals(event.getType())) {
+        if (Event.EventType.None.equals(event.getType())) {//Event.EventType.None 没有连接
             // 连接状态发生变化
-            if (Event.KeeperState.SyncConnected.equals(event.getState())) {
+            if (Event.KeeperState.SyncConnected.equals(event.getState())) {//连接
                 // 连接建立成功
                 connectedSemaphore.countDown();
             }
@@ -103,9 +105,9 @@ public class ZooKeeperBase implements Watcher {
             watchedEventList.add(event);
 
             if (Event.EventType.NodeCreated.equals(event.getType())) {
-                processNodeCreated(event);
+                processNodeCreated(event);//NodeCreated  节点创建
             } else if (Event.EventType.NodeDeleted.equals(event.getType())) {
-                processNodeDeleted(event);
+                processNodeDeleted(event);//NodeDeleted  节点删除处理
             } else if (Event.EventType.NodeDataChanged.equals(event.getType())) {
                 processNodeDataChanged(event);
             } else if (Event.EventType.NodeChildrenChanged.equals(event.getType())) {

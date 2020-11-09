@@ -23,7 +23,7 @@ public class ZooKeeperWatcher extends ZooKeeperBase implements Runnable {
     String zNode;
 
     public ZooKeeperWatcher(String address, String zNode) throws KeeperException, IOException {
-        super(address);
+        super(address);//连接客户端
 
         this.zNode = zNode;
 
@@ -31,6 +31,10 @@ public class ZooKeeperWatcher extends ZooKeeperBase implements Runnable {
         readNodeData();
     }
 
+    /**
+     * 监听的具体实现方法
+     * @param event
+     */
     @Override
     protected void processNodeCreated(WatchedEvent event) {
         String path = event.getPath();
@@ -45,6 +49,8 @@ public class ZooKeeperWatcher extends ZooKeeperBase implements Runnable {
         String path = event.getPath();
         if (path != null && path.equals(zNode)) {
             // 节点数据被修改
+            System.out.println("节点数据被修改");
+            log.info("节点数据被修改");
             readNodeData();
         }
     }

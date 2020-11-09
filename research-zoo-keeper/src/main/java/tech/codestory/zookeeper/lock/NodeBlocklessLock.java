@@ -23,7 +23,7 @@ public class NodeBlocklessLock extends ZooKeeperBase implements ZooKeeperLock {
     String clientGuid;
 
     public NodeBlocklessLock(String address) throws IOException {
-        super(address);
+        super(address);//连接客户端操作
     }
 
     /**
@@ -42,7 +42,7 @@ public class NodeBlocklessLock extends ZooKeeperBase implements ZooKeeperLock {
         try {
             if (getZooKeeper().exists(guidNodeName, false) == null) {
                 getZooKeeper().create(guidNodeName, clientGuid.getBytes(),
-                        ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+                        ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);//针对节点本身加锁, 创建临时节点
                 byte[] data = getZooKeeper().getData(guidNodeName, false, null);
                 if (data != null && clientGuid.equals(new String(data))) {
                     result = true;

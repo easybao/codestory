@@ -29,7 +29,7 @@ public class NodeBlocklessLockTest extends TestBase {
         log.info("锁还未生成，不存在。");
         assert assertResult;
 
-        assertResult = zooKeeperLock.lock(guidNodeName, clientGuid);
+        assertResult = zooKeeperLock.lock(guidNodeName, clientGuid);//加锁过程: 1: 是否存在,不存在就创建临时节点
         log.info("获取分布式锁应该成功。");
         assert assertResult;
 
@@ -69,7 +69,7 @@ public class NodeBlocklessLockTest extends TestBase {
             threads[i].start();
         }
         for (int i = 0; i < threadCount; i++) {
-            threads[i].join();
+            threads[i].join();//join() 是将该线程添加到当前线程
         }
         assert LockClientThread.successLockSemaphore.getCount() == 0;
     }

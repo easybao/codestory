@@ -18,7 +18,7 @@ public class ZooKeeperReadLock extends ChildrenBlockingLock {
     public static final String FLAG = "r-lock-";
 
     public ZooKeeperReadLock(String address) throws IOException {
-        super(address);
+        super(address);//连接zookeeper客户端
     }
 
     /**
