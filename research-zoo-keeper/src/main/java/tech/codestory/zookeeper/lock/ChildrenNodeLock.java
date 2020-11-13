@@ -113,17 +113,25 @@ public abstract class ChildrenNodeLock extends ZooKeeperBase implements ZooKeepe
         boolean result = false;
         this.guidNodeName = guidNodeName;
 
-        // 确保根节点存在，并且创建为容器节点
-        super.createRootNode(this.guidNodeName, CreateMode.CONTAINER);
+
 
         try {
+            // 确保根节点存在，并且创建为容器节点
+            //String rootNode = super.createRootNode(this.guidNodeName, CreateMode.CONTAINER);
+            Stat stat = getZooKeeper().exists(this.guidNodeName, false);
+            if(stat == null){
+                String rootNode = super.createRootNode(this.guidNodeName, CreateMode.PERSISTENT);
+                log.info("根节点: {}",rootNode);
+            }
+
             // 创建子节点并返回带序列号的节点名
             String fullNodeName = this.guidNodeName + "/" + getChildPrefix();
+            log.info("持久节点下的 临时节点: {}",fullNodeName);
             byte[] nodeValue = clientGuid == null ? new byte[0] : clientGuid.getBytes();
             elementNodeFullName = getZooKeeper().create(fullNodeName, nodeValue,
                     ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);//创建持久节点下的 顺序节点
             elementNodeName = elementNodeFullName.substring(guidNodeName.length() + 1);
-
+            log.info("持久节点下的 临时节点: {}",elementNodeFullName);//client 重新启动 就丢失
             log.trace("{} 尝试获取锁", elementNodeName);
 
             boolean lockSuccess = isLockSuccess();

@@ -70,6 +70,7 @@ public class ZooKeeperWatcher extends ZooKeeperBase implements Runnable {
     private void readNodeData() {
         try {
             Stat stat = new Stat();
+            //getData这个方法会添加监听
             byte[] data = getZooKeeper().getData(zNode, true, stat);
             if (data != null) {
                 log.info("{}, value={}, version={}", zNode, new String(data), stat.getVersion());

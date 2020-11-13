@@ -20,7 +20,8 @@ public class ChildrenBlockingLockTest extends TestBase {
      */
     @Test
     public void testChildrenBlocking() throws IOException {
-        String guidNodeName = "/guid-" + System.currentTimeMillis();
+        //String guidNodeName = "/guid-" + System.currentTimeMillis();
+        String guidNodeName = "/guid-chijiu" ;//根节点
         String clientGuid = "client-0";
 
         ChildrenBlockingLock zooKeeperLock = new ChildrenBlockingLock(address);

@@ -66,12 +66,13 @@ public class ChildrenBlockingLock extends ChildrenNodeLock {
                     lockSuccess = true;
                     break;
                 } else {
+                    log.trace("{} 监控 {} 子节点变化事件", elementNodeName, guidNodeName);
                     // 有更小的节点，说明当前节点没抢到锁，注册前一个节点的监听。
                     if (monitorChildrenEvent) {
-                        log.trace("{} 监控 {} 子节点变化事件", elementNodeName, guidNodeName);
-                        getZooKeeper().getChildren(this.guidNodeName, true);
+                       getZooKeeper().getChildren(this.guidNodeName, true);//获取到这个节点,添加监听
                     } else {
                         log.trace("{} 监控 {} 的事件", elementNodeName, prevElementName);
+                        //添加一个监听, 监听前一个节点是否存在
                         getZooKeeper().exists(this.guidNodeName + "/" + prevElementName, true);
                     }
                     synchronized (mutex) {
