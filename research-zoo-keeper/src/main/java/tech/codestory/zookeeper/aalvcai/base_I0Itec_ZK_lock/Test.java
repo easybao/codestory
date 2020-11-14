@@ -12,6 +12,10 @@ public class Test {
     //static I0Itec_DistributeLock distributeLock = new I0Itec_DistributeLock();
     static Zk distributeLock = new Zk();
     public static void main(String[] args) {
+
+        /**
+         * 这种写法,不行 并发下有异常
+         */
         for (int i = 0; i < 10; i++) {
             new Thread(()->{
                 try {

@@ -13,6 +13,9 @@ public class ZkLock {
     private static I0Itec_DistributeLock zk = new I0Itec_DistributeLock();
 
     public static void main(String[] args) {
+        /**
+         * 这种写法,不行 并发下有异常
+         */
         try {
             for (int i = 0; i < NUM; i++) {
                 new Thread(new Runnable() {
