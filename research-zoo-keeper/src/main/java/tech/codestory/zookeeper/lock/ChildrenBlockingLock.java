@@ -1,12 +1,12 @@
 package tech.codestory.zookeeper.lock;
 
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.Objects;
-import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
-import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  * ZooKeeper中基于子节点功能加锁<br>

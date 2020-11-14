@@ -8,6 +8,7 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.codestory.zookeeper.ZooKeeperBase;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -157,6 +158,7 @@ public abstract class ChildrenNodeLock extends ZooKeeperBase implements ZooKeepe
         boolean result = true;
         try {
             // 删除子节点
+            log.info("监听的节点被删除: {}",elementNodeFullName);
             getZooKeeper().delete(elementNodeFullName, 0);
         } catch (KeeperException e) {
             result = false;

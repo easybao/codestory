@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class Test {
     static volatile int num = 0;
-    static I0Itec_DistributeLock distributeLock = new I0Itec_DistributeLock();
-    //static Zk distributeLock = new Zk();
+    //static I0Itec_DistributeLock distributeLock = new I0Itec_DistributeLock();
+    static Zk distributeLock = new Zk();
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
             new Thread(()->{
@@ -20,6 +20,7 @@ public class Test {
                     for (int j = 0; j < 10; j++) {
                         num++;
                     }
+                    System.out.println( "num的值是 : "+ num );
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -27,8 +28,5 @@ public class Test {
                 }
             }).start();
         }
-
-        while (Thread.activeCount() > 2){}
-        System.out.println(num + "的最终值是");
     }
 }
