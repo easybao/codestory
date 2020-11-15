@@ -20,7 +20,7 @@ import java.util.concurrent.locks.Lock;
  */
 @Slf4j
 public class I0Itec_DistributeLock implements Lock {
-    ZkClient zkClient ;
+    static ZkClient zkClient ;
     CountDownLatch countDownLatch = new CountDownLatch(1);
     String PersistentNode = "/PersistentLock";
     String currentNodeAllName ; //创建子节点 顺序节点的完整名
@@ -45,7 +45,12 @@ public class I0Itec_DistributeLock implements Lock {
             System.out.println("加锁成功");
         }else{
             //监听前一顺序节点是否删除
-            waitPreNodeDelLock();
+            //waitPreNodeDelLock();
+            try {
+                this.wait(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             //加锁
             lock();
         }
@@ -62,9 +67,9 @@ public class I0Itec_DistributeLock implements Lock {
     public boolean tryLock() { //注意 这个方法一定要 同步, synchronized, 否则会出现同时创建多个子节点,最后一个子节点和 list中第一个子节点永远不相同,导致监听list中的倒数第二个子节点,但是这个节点永远不会删除,从而一直阻塞在这里,
         if(StringUtil.isNullOrEmpty(currentNodeAllName)){
             //1: 创建持久节点下临时顺序节点
-            String currentNodeAllName = this.zkClient.createEphemeralSequential(PersistentNode+"/children","lock_sign");
+            currentNodeAllName = this.zkClient.createEphemeralSequential(PersistentNode+"/children","lock_sign");
             // 添加到ThreadLocal中,并发时, ThreadLocal为每一个线程 保存该线程创建的临时顺序节点,记得在使用完ThreadLocal后,要删除, 避免内存泄漏
-            currentNodeAllNameThreadLocal.set(currentNodeAllName);
+            //currentNodeAllNameThreadLocal.set(currentNodeAllName);
             log.info("currentNodeAllName:  {}",currentNodeAllName);
         }
         //2: 获取持久节点下的所有孩子节点
@@ -76,8 +81,9 @@ public class I0Itec_DistributeLock implements Lock {
                 return o1.substring(o1.length() - 10).compareTo(o2.substring(o2.length() - 10));
             }
         });
+
         log.info("children:  {}",children.toString());
-        if (getCurrentNodeNameFromThreadLocal().equals(PersistentNode+"/"+children.get(0))) {
+        if (currentNodeAllName.equals(PersistentNode+"/"+children.get(0))) {
             //是第一个节点,
             System.out.println("加锁成功,对应的节点是: " + currentNodeAllName);
             return true;
@@ -87,35 +93,31 @@ public class I0Itec_DistributeLock implements Lock {
             //beforeNodeName 保存的是节点的完整名字, 否则会导致,监听子节点删除,监听不到,删除子节点也删除不了,进而出现栈溢出
             beforeNodeName = PersistentNode + "/"+ children.get(index - 1);
             log.info("beforeNodeName:  {}",beforeNodeName);
+            waitPreNodeDelLock();//失败就监听这个节点
         }
         return false;
     }
 
 
     private void waitPreNodeDelLock() {
-        IZkDataListener listener = new IZkDataListener() {
+
+        //添加监听
+        this.zkClient.subscribeDataChanges(beforeNodeName,new IZkDataListener() {
             @Override
             public void handleDataChange(String dataPath, Object data) throws Exception {
             }
             @Override
             public void handleDataDeleted(String dataPath) throws Exception {
                 System.out.println(dataPath + "  节点被删除了 ");
-                countDownLatch.countDown();//计数器减一
+                //countDownLatch.countDown();//计数器减一
+                if(tryLock()){//监听的节点删除,尝试加锁
+                    //countDownLatch.await();//加锁成功,countDownLatch为0,才继续往下执行
+                    this.notify();
+                    //去除监听
+                    zkClient.unsubscribeDataChanges(beforeNodeName,this);
+                }
             }
-        };
-        //添加监听
-        this.zkClient.subscribeDataChanges(beforeNodeName,listener);
-        if (this.zkClient.exists(beforeNodeName)){
-            try {
-                // 在这里阻塞, 知道countDownLatch 等于0 ,才继续往下执行
-                System.out.println("加锁失败,在此等待");
-                countDownLatch.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        //去除监听
-        this.zkClient.unsubscribeDataChanges(beforeNodeName,listener);
+        });
     }
     @Override
     public void unlock() {

@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class Test {
     static volatile int num = 0;
-    //static I0Itec_DistributeLock distributeLock = new I0Itec_DistributeLock();
-    static Zk distributeLock = new Zk();
+    static I0Itec_DistributeLock distributeLock = new I0Itec_DistributeLock();
+    //static Zk distributeLock = new Zk();
     public static void main(String[] args) {
 
         /**
