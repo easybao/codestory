@@ -20,7 +20,7 @@ import java.util.concurrent.locks.Lock;
  */
 @Slf4j
 public class I0Itec_DistributeLock implements Lock {
-    static ZkClient zkClient ;
+    ZkClient zkClient ;
     CountDownLatch countDownLatch = new CountDownLatch(1);
     String PersistentNode = "/PersistentLock";
     String currentNodeAllName ; //创建子节点 顺序节点的完整名

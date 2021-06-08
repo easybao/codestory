@@ -4,7 +4,6 @@ import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -46,6 +45,7 @@ public class Zk implements Lock {
         }
     }
 
+    @Override
     public synchronized boolean tryLock() {
         // 第一次就进来创建自己的临时节点
         if (StringUtils.isBlank(path)) {
