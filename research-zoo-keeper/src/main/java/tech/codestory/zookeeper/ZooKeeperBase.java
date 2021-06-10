@@ -1,6 +1,5 @@
 package tech.codestory.zookeeper;
 
-import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import java.util.concurrent.CountDownLatch;
  * 为 ZooKeeper测试代码创建一个基类，封装建立连接的过程
  *
  *  https://www.cnblogs.com/codestory/p/11387116.html
+ *  origin	https://github.com/easybao/codestory.git 项目地址
  *
  * @author junyongliao
  * @date 2019/8/16

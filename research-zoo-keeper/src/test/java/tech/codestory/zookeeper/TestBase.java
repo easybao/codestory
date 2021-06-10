@@ -11,4 +11,8 @@ public class TestBase {
      * ZooKeeper 主机地址
      */
     protected final String address = "localhost:2181";
+
+    /**
+     * 项目地址: origin	https://github.com/easybao/codestory.git
+     */
 }
