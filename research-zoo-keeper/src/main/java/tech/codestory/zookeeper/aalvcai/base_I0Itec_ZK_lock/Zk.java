@@ -46,6 +46,7 @@ public class Zk implements Lock {
         }
     }
 
+    @Override
     public synchronized boolean tryLock() {
         // 第一次就进来创建自己的临时节点
         if (StringUtils.isBlank(path)) {

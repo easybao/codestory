@@ -120,7 +120,7 @@ public abstract class ChildrenNodeLock extends ZooKeeperBase implements ZooKeepe
             // 确保根节点存在，并且创建为容器节点
             //String rootNode = super.createRootNode(this.guidNodeName, CreateMode.CONTAINER);
             Stat stat = getZooKeeper().exists(this.guidNodeName, false);
-            if(stat == null){
+            if(stat == null){//不存在就创建持久性根节点
                 String rootNode = super.createRootNode(this.guidNodeName, CreateMode.PERSISTENT);
                 log.info("根节点: {}",rootNode);
             }

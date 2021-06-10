@@ -1,5 +1,6 @@
-package tech.codestory.zookeeper.aalvcai.redis_db_data_same;
+package tech.codestory.zookeeper.aalvcai;
 
+import org.junit.Test;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -26,32 +27,31 @@ public class RedissonDistributeLock {
         return this.redissonClient;
     }
 
-    static volatile int num = 0;
+    static int num = 0;
     public static void main(String[] args) {
-        //连接客户端. 并获取client
+
+        /**
+         * ��� Ҳû����� ��bug,ԭ������־��û�е���
+         */
+        //���ӿͻ���. ����ȡclient
         RedissonClient redissonClient = new RedissonDistributeLock().getRedissonClient();
         RLock lock = redissonClient.getLock("DISTRIBUTE_LOCK");
         for (int i = 0; i < 100; i++) {
             new Thread(()->{
-                try {
-                    lock.lock(100, TimeUnit.MILLISECONDS);//锁100毫秒
-                    handlerMethod();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    lock.unlock();
+                lock.lock(1,TimeUnit.SECONDS);
+                for (int j = 0; j < 100000; j++) {
+                    num++;
+                    System.out.println(Thread.currentThread().getName()+"���ӵ�����Ϊ: "+num);
                 }
-            }).start();
+                lock.unlock();
+            },"�߳���:"+i).start();
         }
-       while (Thread.activeCount() > 2){
-
-       }
-        redissonClient.shutdown();//一定要记得关闭
-        System.out.println("num 的最终值是: " + num);
+        while (Thread.activeCount() > 2){}
+        System.out.println("num ������ֵ��: " + num);
     }
 
     private static void handlerMethod() {
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
             num++;
         }
     }

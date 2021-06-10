@@ -76,7 +76,7 @@ public class ZooKeeperBase implements Watcher {
             // 创建 tableSerial 的zNode
             try {
                 Stat existsStat = getZooKeeper().exists(rootNodeName, false);
-                if (existsStat == null) {
+                if (existsStat == null) {//不存在就新建
                     rootNodeName = getZooKeeper().create(rootNodeName, new byte[0],
                             ZooDefs.Ids.OPEN_ACL_UNSAFE, createMode);
                 }
@@ -110,9 +110,9 @@ public class ZooKeeperBase implements Watcher {
             } else if (Event.EventType.NodeDeleted.equals(event.getType())) {
                 processNodeDeleted(event);//NodeDeleted  节点删除处理
             } else if (Event.EventType.NodeDataChanged.equals(event.getType())) {
-                processNodeDataChanged(event);
+                processNodeDataChanged(event);//节点数据变更
             } else if (Event.EventType.NodeChildrenChanged.equals(event.getType())) {
-                processNodeChildrenChanged(event);
+                processNodeChildrenChanged(event);//节点的子节点有改变
             }
         }
     }

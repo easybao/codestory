@@ -31,6 +31,7 @@ public class ChildrenBlocklessLock extends ChildrenNodeLock {
     @Override
     protected boolean isLockSuccess() throws KeeperException, InterruptedException {
         boolean lockSuccess = false;
+        // 获取当前节点的前一个节点，如果为空表示自己是第一个
         String prevElementName = getPrevElementName();
         if (prevElementName != null) {
             // 有更小的节点，说明当前节点没抢到锁，删掉自己并退出

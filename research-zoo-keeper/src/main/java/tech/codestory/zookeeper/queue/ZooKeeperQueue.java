@@ -62,7 +62,7 @@ public class ZooKeeperQueue extends ZooKeeperBase {
         value = b.array();
         String elementName = queueName + "/element";
         ArrayList<ACL> ids = ZooDefs.Ids.OPEN_ACL_UNSAFE;
-        CreateMode createMode = CreateMode.PERSISTENT_SEQUENTIAL;
+        CreateMode createMode = CreateMode.PERSISTENT_SEQUENTIAL;//创建持久性节点下的临时顺序节点
         getZooKeeper().create(elementName, value, ids, createMode);
 
         return true;

@@ -70,6 +70,7 @@ public class DistributedLockDemo {
 	@After
 	public void close() {
 		CloseableUtils.closeQuietly(client);
+		CloseableUtils.closeQuietly(client2);
 		//CloseableUtils.closeQuietly(testingServer);
 		//CloseableUtils.closeQuietly(testingCluster);
 	}
@@ -84,6 +85,7 @@ public class DistributedLockDemo {
 
 		// 获取锁对象
 		lock.acquire();
+        //lock2.acquire();
 
 		// 测试是否可以重入
 		// 超时获取锁对象(第一个参数为时间,第二个参数为时间单位),因为锁已经被获取,所以返回 false

@@ -27,6 +27,11 @@ public class ZooKeeperQueueTest extends TestBase {
 
     @Test
     public void testQueue() throws InterruptedException {
+        /**
+         * zk 利用他的特性可以做 队列 原理:
+         *   入队: 在持久性节点下创建 临时顺序节点
+         *   出队: 获取队列第一个节点,删除这个节点,并返回这个值
+         */
         log.info("开始ZooKeeper队列测试，本次将测试 {} 个数据", count);
         QueueProducer queueProducer = new QueueProducer();
         QueueConsumer queueConsumer = new QueueConsumer();

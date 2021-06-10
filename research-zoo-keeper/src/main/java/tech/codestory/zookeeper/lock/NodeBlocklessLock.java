@@ -45,7 +45,7 @@ public class NodeBlocklessLock extends ZooKeeperBase implements ZooKeeperLock {
                         ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);//针对节点本身加锁, 创建临时节点
                 byte[] data = getZooKeeper().getData(guidNodeName, false, null);
                 if (data != null && clientGuid.equals(new String(data))) {
-                    result = true;
+                    result = true;// 加锁成功,这是 对节点加锁,创建临时节点,并没有在起下面排队, 会造成脑裂
                 } else {
                     log.info("创建node成功，但值不是自己添加的，理论上不应该出现这种情况");
                 }

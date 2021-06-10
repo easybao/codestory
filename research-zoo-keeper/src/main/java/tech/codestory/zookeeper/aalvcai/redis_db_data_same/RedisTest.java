@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  *
- *  Ğ´Ò»¸ö ½â¾ö redis ºÍ db Êı¾İÒ»ÖÂĞÔµÄdemo
+ *  å†™ä¸€ä¸ª è§£å†³ redis å’Œ db æ•°æ®ä¸€è‡´æ€§çš„demo
  * @version 1.0.0
  * @@menu <p>
  * @date 2020/11/12 11:11
@@ -21,28 +21,28 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisTest {
     /**
-     *  ÕâÀï jedis  ºÍredisson ÁªºÏÊ¹ÓÃ
-     *  Êı¾İÒ»ÖÂĞÔ½â¾ö·½°¸, ºÍ »º´æ´©Í¸, »º´æ»÷´©, »º´æÑ©±À  µÄdemo
-     * ÑÓÊ±Ë«É¾,  ÏÈÉ¾»º´æ,Ö®ºó¸üĞÂÊı¾İ¿â,ÔÚÖ®ºóË¯1Ãë(Ä¿µÄÊÇÈ·±£¿âÒÑ¸üĞÂÍê±Ï),ÔÙÉ¾»º´æ
+     *  è¿™é‡Œ jedis  å’Œredisson è”åˆä½¿ç”¨
+     *  æ•°æ®ä¸€è‡´æ€§è§£å†³æ–¹æ¡ˆ, å’Œ ç¼“å­˜ç©¿é€, ç¼“å­˜å‡»ç©¿, ç¼“å­˜é›ªå´©  çš„demo
+     * å»¶æ—¶åŒåˆ ,  å…ˆåˆ ç¼“å­˜,ä¹‹åæ›´æ–°æ•°æ®åº“,åœ¨ä¹‹åç¡1ç§’(ç›®çš„æ˜¯ç¡®ä¿åº“å·²æ›´æ–°å®Œæ¯•),å†åˆ ç¼“å­˜
      *
-     * »º´æ´©Í¸: ´óÁ¿ÇëÇóÀ´ÇëÇóÒ»¸ö²»´æÔÚµÄÊı¾İ,»º´æ,Êı¾İ¿â¶¼²»´æÔÚ,,½â¾ö·½°¸: ²éÑ¯Êı¾İ¿âÈç¹ûÎª¿Õ¾ÍÉèÖÃ»º´æÎªnull,²¢ÉèÖÃ¹ıÆÚÊ±¼ä,²»³¬¹ı5·ÖÖÓ
+     * ç¼“å­˜ç©¿é€: å¤§é‡è¯·æ±‚æ¥è¯·æ±‚ä¸€ä¸ªä¸å­˜åœ¨çš„æ•°æ®,ç¼“å­˜,æ•°æ®åº“éƒ½ä¸å­˜åœ¨,,è§£å†³æ–¹æ¡ˆ: æŸ¥è¯¢æ•°æ®åº“å¦‚æœä¸ºç©ºå°±è®¾ç½®ç¼“å­˜ä¸ºnull,å¹¶è®¾ç½®è¿‡æœŸæ—¶é—´,ä¸è¶…è¿‡5åˆ†é’Ÿ
      *
-     * »º´æ»÷´©: key¶ÔÓ¦µÄÊı¾İ,¿âÖĞ´æÔÚ,»º´æÊ§Ğ§,,µ¼ÖÂ´óÁ¿ÇëÇó¶¼À´ÇëÇóÊı¾İ¿â,½â¾ö·½°¸: Èç¹û²éµ½»º´æÎª¿Õ, ²»Á¢¼´²é¿â,  ´ËÊ±ÉèÖÃÒ»¸ö»¥³âËø,Ö»ÓĞ¼ÓËø³É¹¦µÄÏß³Ì²ÅÈ¥db²éÊı¾İ, ÉèÖÃÊ§°ÜµÄÏß³Ì ÖØÊÔ
+     * ç¼“å­˜å‡»ç©¿: keyå¯¹åº”çš„æ•°æ®,åº“ä¸­å­˜åœ¨,ç¼“å­˜å¤±æ•ˆ,,å¯¼è‡´å¤§é‡è¯·æ±‚éƒ½æ¥è¯·æ±‚æ•°æ®åº“,è§£å†³æ–¹æ¡ˆ: å¦‚æœæŸ¥åˆ°ç¼“å­˜ä¸ºç©º, ä¸ç«‹å³æŸ¥åº“,  æ­¤æ—¶è®¾ç½®ä¸€ä¸ªäº’æ–¥é”,åªæœ‰åŠ é”æˆåŠŸçš„çº¿ç¨‹æ‰å»dbæŸ¥æ•°æ®, è®¾ç½®å¤±è´¥çš„çº¿ç¨‹ é‡è¯•
      *
-     * »º´æÑ©±À: ´óÁ¿key¼¯ÖĞÍ¬Ò»Ê±¼ä¹ıÆÚ, ÕâÖÖÇé¿öÏÂ,¼ÓËø/»òÕß¶ÓÁĞµÄ·½Ê½±£Ö¤ÁË²»»áÓĞ´óÁ¿Ïß³ÌÒ»´ÎĞÔ¶Ô¿â¶ÁĞ´,¼õÇáÁË¿âµÄÑ¹Á¦,µ«ÊÇ²¢Ã»ÓĞÌáÉıÏµÍ³µÄÍÌÍÂÁ¿,  ½â¾ö·½°¸: ½«»º´æÊ§Ğ§Ê±¼ä·ÖÉ¢¿ª,1-5·ÖÖÓËæ»úÖµ
+     * ç¼“å­˜é›ªå´©: å¤§é‡keyé›†ä¸­åŒä¸€æ—¶é—´è¿‡æœŸ, è¿™ç§æƒ…å†µä¸‹,åŠ é”/æˆ–è€…é˜Ÿåˆ—çš„æ–¹å¼ä¿è¯äº†ä¸ä¼šæœ‰å¤§é‡çº¿ç¨‹ä¸€æ¬¡æ€§å¯¹åº“è¯»å†™,å‡è½»äº†åº“çš„å‹åŠ›,ä½†æ˜¯å¹¶æ²¡æœ‰æå‡ç³»ç»Ÿçš„ååé‡,  è§£å†³æ–¹æ¡ˆ: å°†ç¼“å­˜å¤±æ•ˆæ—¶é—´åˆ†æ•£å¼€,1-5åˆ†é’Ÿéšæœºå€¼
      */
     static Jedis jedis;
     static RedissonClient redissonClient;
-    static Map<String,User> map = new HashMap<>();//Êı¾İ¿â
+    static Map<String,User> map = new HashMap<>();//æ•°æ®åº“
 
     public RedisTest(String host, int port) {
-        //Á¬½Ó¿Í»§¶Ë
+        //è¿æ¥å®¢æˆ·ç«¯
         this.jedis = new Jedis(host,port);
 
         Config config = new Config();
         config.useSingleServer().setAddress("redis://localhost:6379");
         redissonClient = Redisson.create(config);
-        System.out.println("Á¬½Óredis³É¹¦");
+        System.out.println("è¿æ¥redisæˆåŠŸ");
     }
 
     public static boolean keyIsExist(String key){
@@ -55,45 +55,45 @@ public class RedisTest {
 
     public Object readData(String key){
         if (! keyIsExist(key)) {
-            //key ²»´æÔÚ, ´ËÊ±²»Á¢¼´²éÑ¯¿â,¶øÊÇÉèÖÃÒ»¸ö»¥³âËø
-            Long setnx = jedis.setnx("OWEN_LOCK", "OWEN_LOCK");//Èç¹ûkey²»´æÔÚ¾Í·µ»Ø0, keyÒÑ¾­´æÔÚ·µ»Ø1
-            log.info("setnx·½·¨ : "+ Thread.currentThread().getName()+"---"+setnx);
+            //key ä¸å­˜åœ¨, æ­¤æ—¶ä¸ç«‹å³æŸ¥è¯¢åº“,è€Œæ˜¯è®¾ç½®ä¸€ä¸ªäº’æ–¥é”
+            Long setnx = jedis.setnx("OWEN_LOCK", "OWEN_LOCK");//å¦‚æœkeyä¸å­˜åœ¨å°±è¿”å›0, keyå·²ç»å­˜åœ¨è¿”å›1
+            log.info("setnxæ–¹æ³• : "+ Thread.currentThread().getName()+"---"+setnx);
             if(setnx == 0){
-                //ÉèÖÃ³É¹¦, ¶ÁÈ¡Êı¾İ¿â
+                //è®¾ç½®æˆåŠŸ, è¯»å–æ•°æ®åº“
                 User user = map.get(key);
                 if(user == null){
                     jedis.set(key,null);
-                    jedis.expire(key,new Random().nextInt(5));//¿Õkey ÉèÖÃ0-5Ãë¹ıÆÚ
+                    jedis.expire(key,new Random().nextInt(5));//ç©ºkey è®¾ç½®0-5ç§’è¿‡æœŸ
                 }else{
-                    //ÉèÖÃ»º´æ
+                    //è®¾ç½®ç¼“å­˜
                     jedis.set(key,user.toString());
                 }
                 return user;
             }
-            System.out.println("Ã»ÓĞÉèÖÃ »¥³âËø³É¹¦");
+            System.out.println("æ²¡æœ‰è®¾ç½® äº’æ–¥é”æˆåŠŸ");
         }
         return jedis.get(key);
     }
 
     /**
-     * Ğ´  ÑÓÊ±Ë«É¾
+     * å†™  å»¶æ—¶åŒåˆ 
      * @param user
      */
     public void writeData(User user){
         String cacheKey = "key_"+user.getId();
-        // 1: ÏÈÉ¾»º´æ
+        // 1: å…ˆåˆ ç¼“å­˜
         if(keyIsExist(cacheKey)){
             delKey(cacheKey);
         }
-        // 2: ¸üĞÂÊı¾İ¿â
-        map.put(cacheKey,user);//ºÄÊ±Ğ¡ÓÚ500ºÁÃë
-        // 3: Ë¯1Ãë(ÕâÀïË¯Ò»ÃëÊÇ±£Ö¤ ¿â¸üĞÂÍê)
+        // 2: æ›´æ–°æ•°æ®åº“
+        map.put(cacheKey,user);//è€—æ—¶å°äº500æ¯«ç§’
+        // 3: ç¡1ç§’(è¿™é‡Œç¡ä¸€ç§’æ˜¯ä¿è¯ åº“æ›´æ–°å®Œ)
         try {
             TimeUnit.MILLISECONDS.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // 4: ÔÙÉ¾»º´æ
+        // 4: å†åˆ ç¼“å­˜
         if(keyIsExist(cacheKey)){
             delKey(cacheKey);
         }
@@ -146,12 +146,12 @@ class Test{
     public static void main(String[] args) {
         RedisTest redis = new RedisTest("127.0.0.1", 6379);
 
-        //¶àÏß³ÌĞ´Êı¾İ
+        //å¤šçº¿ç¨‹å†™æ•°æ®
         for (int i = 0; i < 10; i++) {
             int j = i;
             new Thread(()->{
                 redis.writeData(new User(j,"qiqi"));
-            },"Ïß³Ì"+i).start();
+            },"çº¿ç¨‹"+i).start();
         }
 
         redis.getMap();
